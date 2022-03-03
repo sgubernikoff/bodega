@@ -1,14 +1,27 @@
-import React from 'react'
+import React from "react";
 
-function InventoryItemCard({item}) {
-    return(
-        <div className="card" onClick={() => console.log("Clicking the item...")}>
-            <img src=''></img>
-            <h3>ITEM NAME</h3>
-            <h4>$ITEM PRICE</h4>
-            <button onClick={() => console.log("Deleting the item...")}>Delete</button>
-        </div>
-    );
+function InventoryItemCard({ item, clickSnack, clickDelete }) {
+  function handleClick() {
+    clickSnack(item);
+  }
+
+  function handleDelete(e) {
+    e.stopPropagation();
+    fetch(`http://localhost:8001/inventory/${item.id}`, {
+      method: "DELETE",
+    })
+      .then((resp) => resp.json())
+      .then(() => clickDelete(item));
+  }
+
+  return (
+    <div className="card" onClick={handleClick}>
+      <img src={item.image}></img>
+      <h3>{item.name}</h3>
+      <h4>{item.price}</h4>
+      <button onClick={handleDelete}>Delete</button>
+    </div>
+  );
 }
 
 export default InventoryItemCard;
